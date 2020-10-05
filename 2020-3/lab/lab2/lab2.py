@@ -42,14 +42,6 @@ def rzryrz(U):
                       print("alpha: ", alpha, "beta: ", beta, "gamma: ", gamma, "delta: ", delta)
                       return [alpha, beta, gamma, delta]
 
-    alpha = 0
-    beta = 0
-    gamma = 0
-    delta = 0
-    # -----------------
-
-    return [alpha, beta, gamma, delta]
-
 def operador_controlado(V):
     '''
     Lab2 - questão 2
@@ -123,10 +115,57 @@ def inicializa_3qubits(vetor_dimensao8):
     Lab2 - questão 4
     '''
 
-    circuito = qiskit.QuantumCircuit(3)
+    circuito = qiskit.QuantumCircuit(3) #3 qubits
 
     # ------------------------
     # Seu código aqui
+    #usando o algoritmo da arvore
+    a1 = vetor_dimensao8[0]
+    a2 = vetor_dimensao8[1]
+    a3 = vetor_dimensao8[2]
+    a4 = vetor_dimensao8[3]
+    a5 = vetor_dimensao8[4]
+    a6 = vetor_dimensao8[5]
+    a7 = vetor_dimensao8[6]
+    a8 = vetor_dimensao8[7]
+    
+    b1 = np.sqrt(np.power(a1, 2)+np.power(a2, 2))
+    b2 = np.sqrt(np.power(a3, 2)+np.power(a4, 2))
+    b3 = np.sqrt(np.power(a5, 2)+np.power(a6, 2))
+    b4 = np.sqrt(np.power(a7, 2)+np.power(a8, 2))
+    
+    c1 = np.sqrt(np.power(b1, 2)+np.power(b2, 2))
+    c2 = np.sqrt(np.power(b3, 2)+np.power(b4, 2))
+    
+    d = np.sqrt(np.power(c1, 2)+np.power(c2, 2))
+    
+    alpha0 = 2*np.arcsin(c2/d)
+    alpha1 = 2*np.arcsin(b2/c1)
+    alpha2 = 2*np.arcsin(b4/c2)
+    alpha3 = 2*np.arcsin(a2/b1)
+    alpha4 = 2*np.arcsin(a4/b2)
+    alpha5 = 2*np.arcsin(a6/b3)
+    alpha6 = 2*np.arcsin(a8/b4)
+    
+    #implementacao do circuito dados alpha1..alpha6
+    
+    circuito.ry(alpha0, 0)
+    circuito.x(0)
+    circuito.cry(alpha1, 0, 1)
+    circuito.x(0)
+    circuito.cry(alpha2, 0, 1)
+    circuito.x(0)
+    circuito.x(1)
+    circuito.cry(alpha3, 1, 2)
+    circuito.x(1)
+    circuito.cry(alpha4, 0, 1)
+    circuito.x(0)
+    circuito.x(1)
+    circuito.cry(alpha5, 0, 1)
+    circuito.x(1)
+    circuito.cry(alpha6, 0, 1)
+    
+    
     # ------------------------
 
     return circuito
@@ -166,7 +205,8 @@ QUESTAO 3
 toffoli()
 '''
 
-'''
-#QUESTAO 4
 
-'''
+#QUESTAO 4
+circuito = inicializa_3qubits([1,1,1,1,1,1,1,1])
+print(circuito)
+
